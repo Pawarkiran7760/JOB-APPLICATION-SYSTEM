@@ -18,10 +18,10 @@ print("SECRET KEY LOADED:", app.secret_key)
 
 database_url = URL.create(
     "mysql+pymysql",
-    username="root",
-    password="Kiran@123",
-    host="localhost",
-    database="job_application_db"
+    username=os.getenv("DB_USERNAME"),
+    password=os.getenv("DB_PASSWORD"),
+    host=os.getenv("DB_HOST"),
+    database=os.getenv("DB_NAME")
 )
 
 app.config["SQLALCHEMY_DATABASE_URI"] = database_url
