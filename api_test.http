@@ -1,0 +1,66 @@
+
+POST http://127.0.0.1:5000/api/login
+Content-Type: application/json
+
+{
+    "email": "pawar@gmail.com",
+    "password": "Kiran@123"
+}
+
+
+
+POST http://127.0.0.1:5000/api/login
+Content-Type: application/json
+
+{
+    "email": "YOUR_EMAIL",
+    "password": "YOUR_PASSWORD"
+}
+
+###
+GET http://127.0.0.1:5000/api/applications
+
+
+
+###
+POST http://127.0.0.1:5000/api/applications
+Content-Type: application/json
+
+{
+    "company": "Infosys",
+    "role": "Python Developer",
+    "location": "Bangalore",
+    "application_date": "2026-09-20",
+    "status": "Applied",
+    "salary": 550000,
+    "source": "LinkedIn",
+    "interview_date": null,
+    "notes": "API testing"
+}
+
+
+
+###
+PUT http://127.0.0.1:5000/api/applications/15
+Content-Type: application/json
+
+{
+    "role": "Backend Python Developer",
+    "status": "Interview",
+    "salary": 600000
+}
+
+
+###
+PUT http://127.0.0.1:5000/api/applications/15
+Content-Type: application/json
+
+{
+    "role": "Backend Python Developer",
+    "status": "Interview",
+    "salary": 600000
+}
+
+
+###
+DELETE http://127.0.0.1:5000/api/applications/15

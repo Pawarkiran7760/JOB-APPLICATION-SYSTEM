@@ -1,0 +1,266 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Dashboard</title>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body>
+
+    <h1>Job Application Dashboard</h1>
+
+    <h2>Welcome, {{ username }}</h2>
+
+
+    <!-- Basic Application Statistics -->
+
+    <p>Total Applications: {{ total }}</p>
+
+    <p>Applied: {{ applied }}</p>
+
+    <p>Interviews: {{ interviews }}</p>
+
+    <p>Selected: {{ selected }}</p>
+
+    <p>Rejected: {{ rejected }}</p>
+
+
+    <!-- Pandas Analytics -->
+
+    <h2>Pandas Analytics</h2>
+
+
+    <!-- Selection Rate -->
+
+    <p>
+        Selection Rate:
+        {{ "%.2f"|format(selection_rate) }}%
+    </p>
+
+
+    <!-- Interview Conversion Rate -->
+
+    <p>
+        Interview Conversion Rate:
+        {{ "%.2f"|format(interview_rate) }}%
+    </p>
+
+    <p>
+    Average CTC:
+    ₹{{ "%.2f"|format(average_ctc) }} LPA
+</p>
+
+<h3>Applications by Role</h3>
+
+<canvas id="roleChart"></canvas>
+
+<h3>Applications by Company</h3>
+
+<canvas id="companyChart"></canvas>
+
+<script>
+
+    const companyData = {{ company_counts | tojson }};
+
+    const companies = Object.keys(companyData);
+
+    const companyValues = Object.values(companyData);
+
+    const companyCtx = document.getElementById("companyChart");
+
+    new Chart(companyCtx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: companies,
+
+            datasets: [{
+
+                label: "Applications",
+
+                data: companyValues
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    });
+
+</script>
+
+
+    <!-- Monthly Applications Chart -->
+
+    <h3>Applications by Month</h3>
+
+    <canvas id="monthlyChart"></canvas>
+
+
+    <br><br>
+
+
+    <!-- Application Status Chart -->
+
+    <h3>Applications by Status</h3>
+
+    <canvas id="statusChart"></canvas>
+
+
+    <script>
+
+    const roleData = {{ role_counts | tojson }};
+
+    const roles = Object.keys(roleData);
+
+    const roleValues = Object.values(roleData);
+
+    const roleCtx = document.getElementById("roleChart");
+
+    new Chart(roleCtx, {
+
+        type: "bar",
+
+        data: {
+
+            labels: roles,
+
+            datasets: [{
+
+                label: "Applications",
+
+                data: roleValues
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true
+
+        }
+
+    });
+
+</script>
+
+
+    <!-- Monthly Chart JavaScript -->
+
+    <script>
+
+        const monthlyData = {{ monthly_counts | tojson }};
+
+        const months = Object.keys(monthlyData);
+
+        const counts = Object.values(monthlyData);
+
+        const ctx = document.getElementById("monthlyChart");
+
+        new Chart(ctx, {
+
+            type: "bar",
+
+            data: {
+
+                labels: months,
+
+                datasets: [{
+
+                    label: "Applications",
+
+                    data: counts
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true
+
+            }
+
+        });
+
+    </script>
+
+
+    <!-- Status Chart JavaScript -->
+
+    <script>
+
+        const statusData = {{ status_counts | tojson }};
+
+        const statuses = Object.keys(statusData);
+
+        const statusValues = Object.values(statusData);
+
+        const statusCtx = document.getElementById("statusChart");
+
+        new Chart(statusCtx, {
+
+            type: "pie",
+
+            data: {
+
+                labels: statuses,
+
+                datasets: [{
+
+                    label: "Applications",
+
+                    data: statusValues
+
+                }]
+
+            },
+
+            options: {
+
+                responsive: true
+
+            }
+
+        });
+
+    </script>
+
+
+    <br><br>
+
+
+    <!-- Navigation -->
+
+    <a href="/applications">My Applications</a>
+
+<br><br>
+
+<a href="/add-application">Add Application</a>
+
+<br><br>
+
+<a href="/export-csv">Export Applications to CSV</a>
+
+<br><br>
+
+<a href="/logout">Logout</a>
+
+
+</body>
+
+</html>
+

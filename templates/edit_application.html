@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Job Application</title>
+</head>
+
+<body>
+
+    <h1>Edit Job Application</h1>
+
+    <form method="POST">
+
+        <label>Company:</label>
+        <input type="text" name="company" value="{{ application.company }}" required>
+        <br><br>
+
+        <label>Role:</label>
+        <input type="text" name="role" value="{{ application.role }}" required>
+        <br><br>
+
+        <label>Location:</label>
+        <input type="text" name="location" value="{{ application.location }}">
+        <br><br>
+
+        <label>Application Date:</label>
+        <input type="date" name="application_date"
+               value="{{ application.application_date }}" required>
+        <br><br>
+
+        <label>Status:</label>
+        <select name="status" required>
+            <option value="Applied"
+                {% if application.status == "Applied" %}selected{% endif %}>
+                Applied
+            </option>
+
+            <option value="Interview"
+                {% if application.status == "Interview" %}selected{% endif %}>
+                Interview
+            </option>
+
+            <option value="Selected"
+                {% if application.status == "Selected" %}selected{% endif %}>
+                Selected
+            </option>
+
+            <option value="Rejected"
+                {% if application.status == "Rejected" %}selected{% endif %}>
+                Rejected
+            </option>
+        </select>
+        <br><br>
+
+        <label>Salary / CTC:</label>
+        <input type="number" name="salary" value="{{ application.salary }}">
+        <br><br>
+
+        <label>Source:</label>
+        <input type="text" name="source" value="{{ application.source }}">
+        <br><br>
+
+        <label>Interview Date:</label>
+        <input type="date" name="interview_date"
+               value="{{ application.interview_date or '' }}">
+        <br><br>
+
+        <label>Notes:</label>
+        <textarea name="notes">{{ application.notes or '' }}</textarea>
+        <br><br>
+
+        <button type="submit">Update Application</button>
+
+    </form>
+
+</body>
+</html>
