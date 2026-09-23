@@ -260,6 +260,12 @@ def login():
     return render_template("login.html")
 
 
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
 @app.route("/api/login", methods=["POST"])
 def api_login():
     data = request.get_json()

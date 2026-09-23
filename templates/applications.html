@@ -2,92 +2,109 @@
 <html>
 <head>
     <title>My Applications</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 
 <body>
 
+<div class="container">
+
     <h1>My Job Applications</h1>
 
-    <form method="GET">
+    <div class="card">
+        <form method="GET">
 
-    <input
-        type="text"
-        name="search"
-        placeholder="Search company or role"
-        value="{{ search }}"
-    >
+            <input
+                type="text"
+                name="search"
+                placeholder="Search company or role"
+                value="{{ search }}"
+            >
 
-    <select name="status">
+            <select name="status">
+                <option value="">All Status</option>
 
-        <option value="">All Status</option>
+                <option value="Applied"
+                    {% if status == "Applied" %}selected{% endif %}>
+                    Applied
+                </option>
 
-        <option value="Applied"
-            {% if status == "Applied" %}selected{% endif %}>
-            Applied
-        </option>
+                <option value="Interview"
+                    {% if status == "Interview" %}selected{% endif %}>
+                    Interview
+                </option>
 
-        <option value="Interview"
-            {% if status == "Interview" %}selected{% endif %}>
-            Interview
-        </option>
+                <option value="Selected"
+                    {% if status == "Selected" %}selected{% endif %}>
+                    Selected
+                </option>
 
-        <option value="Selected"
-            {% if status == "Selected" %}selected{% endif %}>
-            Selected
-        </option>
+                <option value="Rejected"
+                    {% if status == "Rejected" %}selected{% endif %}>
+                    Rejected
+                </option>
+            </select>
 
-        <option value="Rejected"
-            {% if status == "Rejected" %}selected{% endif %}>
-            Rejected
-        </option>
+            <button type="submit">Search</button>
 
-    </select>
+            <a href="{{ url_for('applications') }}" class="btn">
+                Clear
+            </a>
 
-    <button type="submit">Search</button>
+        </form>
+    </div>
 
-</form>
+    <div class="card table-container">
 
-<br>
+        <table>
 
-    <table border="1">
+            <tr>
+                <th>Company</th>
+                <th>Role</th>
+                <th>Location</th>
+                <th>Application Date</th>
+                <th>Status</th>
+                <th>Salary</th>
+                <th>Source</th>
+                <th>Action</th>
+            </tr>
 
-        <tr>
-            <th>Company</th>
-            <th>Role</th>
-            <th>Location</th>
-            <th>Application Date</th>
-            <th>Status</th>
-            <th>Salary</th>
-            <th>Source</th>
-            <th>Action</th>
-        </tr>
+            {% for application in applications %}
 
-        {% for application in applications %}
+            <tr>
+                <td>{{ application.company }}</td>
+                <td>{{ application.role }}</td>
+                <td>{{ application.location }}</td>
+                <td>{{ application.application_date }}</td>
+                <td>{{ application.status }}</td>
+                <td>{{ application.salary }}</td>
+                <td>{{ application.source }}</td>
 
-        <tr>
-            <td>{{ application.company }}</td>
-            <td>{{ application.role }}</td>
-            <td>{{ application.location }}</td>
-            <td>{{ application.application_date }}</td>
-            <td>{{ application.status }}</td>
-            <td>{{ application.salary }}</td>
-            <td>{{ application.source }}</td>
-            <td>
-    <a href="/edit-application/{{ application.id }}">Edit</a>
+                <td>
+                    <a
+                        href="{{ url_for('edit_application', id=application.id) }}"
+                        class="btn"
+                    >
+                        Edit
+                    </a>
 
-    <form method="POST"
-          action="/delete-application/{{ application.id }}"
-          style="display:inline;">
+                    <form
+                        method="POST"
+                        action="{{ url_for('delete_application', id=application.id) }}"
+                        style="display: inline;"
+                    >
+                        <button type="submit">Delete</button>
+                    </form>
+                </td>
+            </tr>
 
-        <button type="submit">Delete</button>
+            {% endfor %}
 
-    </form>
-</td>
-        </tr>
+        </table>
 
-        {% endfor %}
+    </div>
 
-    </table>
+</div>
 
 </body>
 </html>
