@@ -436,25 +436,91 @@ def create_application_api():
     if not data:
         return {"error": "JSON data required"}, 400
 
+    # Check required fields
+    required_fields = [
+        "company",
+        "role",
+        "application_date",
+        "status"
+    ]
+
+    missing_fields = [
+        field for field in required_fields
+        if not data.get(field)
+    ]
+
+    if missing_fields:
+        return {
+            "error": "Missing required fields",
+            "fields": missing_fields
+        }, 400
+
+    # Validate application date
+    try:
+        application_date = date.fromisoformat(
+            data["application_date"]
+        )
+    except ValueError:
+        return {
+            "error": "Invalid application_date. Use YYYY-MM-DD format."
+        }, 400
+
+    # Validate interview date
+    interview_date = None
+
+    if data.get("interview_date"):
+
+        try:
+            interview_date = date.fromisoformat(
+                data["interview_date"]
+            )
+        except ValueError:
+            return {
+                "error": "Invalid interview_date. Use YYYY-MM-DD format."
+            }, 400
+
+    # Validate salary
+    salary = data.get("salary")
+
+    if salary is not None:
+
+        try:
+            salary = float(salary)
+
+            if salary < 0:
+                return {
+                    "error": "Salary cannot be negative"
+                }, 400
+
+        except (ValueError, TypeError):
+            return {
+                "error": "Salary must be a valid number"
+            }, 400
+
     application = JobApplication(
-        company=data["company"],
-        role=data["role"],
+        company=data["company"].strip(),
+        role=data["role"].strip(),
         location=data.get("location"),
-        application_date=date.fromisoformat(data["application_date"]),
+        application_date=application_date,
         status=data["status"],
-        salary=data.get("salary"),
+        salary=salary,
         source=data.get("source"),
-        interview_date=(
-            date.fromisoformat(data["interview_date"])
-            if data.get("interview_date")
-            else None
-        ),
+        interview_date=interview_date,
         notes=data.get("notes"),
         user_id=session["user_id"]
     )
 
     db.session.add(application)
-    db.session.commit()
+
+    try:
+        db.session.commit()
+
+    except Exception:
+        db.session.rollback()
+
+        return {
+             "error": "Failed to create application"
+        }, 500
 
     return {
         "message": "Application created successfully",
@@ -482,43 +548,82 @@ def update_application_api(id):
         return {"error": "JSON data required"}, 400
 
     if "company" in data:
-        application.company = data["company"]
+        application.company = data["company"].strip()
 
     if "role" in data:
-        application.role = data["role"]
+        application.role = data["role"].strip()
 
     if "location" in data:
         application.location = data["location"]
 
     if "application_date" in data:
-        application.application_date = date.fromisoformat(
-            data["application_date"]
-        )
+
+        try:
+            application.application_date = date.fromisoformat(
+                data["application_date"]
+            )
+        except ValueError:
+            return {
+                "error": "Invalid application_date. Use YYYY-MM-DD format."
+            }, 400
 
     if "status" in data:
         application.status = data["status"]
 
     if "salary" in data:
-        application.salary = data["salary"]
+
+        try:
+            salary = float(data["salary"])
+
+            if salary < 0:
+                return {
+                    "error": "Salary cannot be negative"
+                }, 400
+
+            application.salary = salary
+
+        except (ValueError, TypeError):
+            return {
+                "error": "Salary must be a valid number"
+            }, 400
 
     if "source" in data:
         application.source = data["source"]
 
     if "interview_date" in data:
-        application.interview_date = (
-            date.fromisoformat(data["interview_date"])
-            if data["interview_date"]
-            else None
-        )
+
+        if data["interview_date"]:
+
+            try:
+                application.interview_date = date.fromisoformat(
+                    data["interview_date"]
+                )
+            except ValueError:
+                return {
+                    "error": "Invalid interview_date. Use YYYY-MM-DD format."
+                }, 400
+
+        else:
+            application.interview_date = None
 
     if "notes" in data:
         application.notes = data["notes"]
 
-    db.session.commit()
+    try:
+        db.session.commit()
+
+    except Exception:
+        db.session.rollback()
+
+        return {
+            "error": "Failed to update application"
+        }, 500
 
     return {
         "message": "Application updated successfully"
     }
+
+
 
 @app.route("/api/applications/<int:id>", methods=["DELETE"])
 def delete_application_api(id):
@@ -537,11 +642,25 @@ def delete_application_api(id):
         return {"error": "Application not found"}, 404
 
     db.session.delete(application)
-    db.session.commit()
+
+    db.session.delete(application)
+
+    try:
+        db.session.commit()
+
+    except Exception as e:
+        db.session.rollback()
+
+        print("DELETE ERROR:", e)
 
     return {
-        "message": "Application deleted successfully"
-    }
+        "error": "Failed to delete application",
+        "details": str(e)
+    }, 500
+
+    return {
+       "message": "Application deleted successfully"
+   }
 
 
 if __name__ == "__main__":

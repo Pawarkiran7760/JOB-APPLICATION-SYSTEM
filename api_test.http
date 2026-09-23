@@ -9,14 +9,34 @@ Content-Type: application/json
 
 
 
-POST http://127.0.0.1:5000/api/login
+# POST http://127.0.0.1:5000/api/login
+# Content-Type: application/json
+
+# {
+#     "email": "YOUR_EMAIL",
+#     "password": "YOUR_PASSWORD"
+# }
+
+### Create Application
+
+### Invalid Application Test
+
+### Create Application
+
+POST http://127.0.0.1:5000/api/applications
 Content-Type: application/json
 
 {
-    "email": "YOUR_EMAIL",
-    "password": "YOUR_PASSWORD"
+    "company": "Dell",
+    "role": "Python Developer",
+    "location": "Bengaluru",
+    "application_date": "2026-09-24",
+    "status": "Applied",
+    "salary": 6,
+    "source": "LinkedIn",
+    "interview_date": null,
+    "notes": "API validation test"
 }
-
 ###
 GET http://127.0.0.1:5000/api/applications
 
@@ -39,9 +59,8 @@ Content-Type: application/json
 }
 
 
-
 ###
-PUT http://127.0.0.1:5000/api/applications/15
+PUT http://127.0.0.1:5000/api/applications/19
 Content-Type: application/json
 
 {
@@ -49,6 +68,24 @@ Content-Type: application/json
     "status": "Interview",
     "salary": 600000
 }
+
+### Invalid PUT Test
+
+PUT http://127.0.0.1:5000/api/applications/19
+Content-Type: application/json
+
+{
+    "salary": -10
+}
+
+
+### Delete Application
+
+DELETE http://127.0.0.1:5000/api/applications/19
+
+### Get Applications
+
+GET http://127.0.0.1:5000/api/applications
 
 
 ###
@@ -64,3 +101,58 @@ Content-Type: application/json
 
 ###
 DELETE http://127.0.0.1:5000/api/applications/15
+
+
+### Final API Test Application
+
+POST http://127.0.0.1:5000/api/applications
+Content-Type: application/json
+
+{
+    "company": "API Test Company",
+    "role": "Backend Developer",
+    "location": "Bengaluru",
+    "application_date": "2026-09-24",
+    "status": "Applied",
+    "salary": 5,
+    "source": "API Test",
+    "interview_date": null,
+    "notes": "Final DELETE test"
+}
+
+
+### Final DELETE Test
+
+DELETE http://127.0.0.1:5000/api/applications/23
+
+
+### Get Applications
+
+GET http://127.0.0.1:5000/api/applications
+
+
+### Delete Application
+
+DELETE http://127.0.0.1:5000/api/applications/23
+
+### Create Test Application
+
+POST http://127.0.0.1:5000/api/applications
+Content-Type: application/json
+
+{
+    "company": "Delete Test",
+    "role": "Backend Developer",
+    "location": "Bengaluru",
+    "application_date": "2026-09-24",
+    "status": "Applied",
+    "salary": 5,
+    "source": "API Test",
+    "interview_date": null,
+    "notes": "Testing DELETE API"
+}
+
+
+### Delete Test Application
+
+DELETE http://127.0.0.1:5000/api/applications/24
